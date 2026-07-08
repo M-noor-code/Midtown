@@ -12,16 +12,23 @@
 	<link
 		href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&display=swap"
 		rel="stylesheet">
-	<!-- Route fix: MUST run before React loads -->
+	<!-- Route fix: Force URL to / so React Router renders homepage, then scroll to #tour -->
 	<script>
 		(function() {
-			var path = window.location.pathname;
-			// Normalize: /office.html or /office/index.html → /office
-			if (path === '/office.html' || path.endsWith('/office.html')) {
-				window.history.replaceState(null, '', '/office');
-			} else if (path === '/' || path === '/index.html') {
-				window.history.replaceState(null, '', '/office');
-			}
+			// Force URL to / so React Router doesn't show 404
+			window.history.replaceState(null, '', '/');
+			// After React mounts, scroll to the office tour section
+			window.addEventListener('load', function() {
+				function scrollToTour(attempts) {
+					var el = document.getElementById('tour');
+					if (el) {
+						el.scrollIntoView({ behavior: 'smooth' });
+					} else if (attempts > 0) {
+						setTimeout(function() { scrollToTour(attempts - 1); }, 300);
+					}
+				}
+				setTimeout(function() { scrollToTour(20); }, 500);
+			});
 		})();
 	</script>
 	<link rel="stylesheet" crossorigin="" href="https://cdn.jsdelivr.net/gh/M-noor-code/Midtown@main/css/index-BjWPVfvm.css">
